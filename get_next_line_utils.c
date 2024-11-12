@@ -12,58 +12,50 @@
 
 #include "get_next_line.h"
 
-// Fonction auxiliaire pour trouver le caractère '\n' dans une chaîne
-int	find_newline(char *str)
-{
-	int i = 0;
-	
-	if (!str)
-		return (-1);
-	while (str[i])
-	{
-		if (str[i] == '\n')
-			return (i);
-		i++;
-	}
-	return (-1);
+size_t	ft_strlen(const char *s) {
+	size_t	len = 0;
+	while (s[len])
+		len++;
+	return len;
 }
 
-// Fonction auxiliaire pour joindre deux chaînes de caractères
-char	*ft_strjoin(char *s1, char *s2)
-{
-	int		i = 0, j = 0;
-	char	*new_str;
+char	*ft_strcpy(char *dest, const char *src) {
+	char	*d = dest;
+	while ((*d++ = *src++));
+	return dest;
+}
 
+char	*ft_strjoin(char *s1, char *s2) {
 	if (!s1 && !s2)
-		return (NULL);
-	new_str = malloc(sizeof(char) * (strlen(s1) + strlen(s2) + 1));
-	if (!new_str)
-		return (NULL);
-	while (s1 && s1[i])
-	{
-		new_str[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[j])
-		new_str[i++] = s2[j++];
-	new_str[i] = '\0';
-	free(s1);  // Libération mémoire s1
-	return (new_str);
+		return NULL;
+	if (!s1)
+		return ft_strdup(s2);
+	if (!s2)
+		return ft_strdup(s1);
+	char	*joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!joined)
+		return NULL;
+	ft_strcpy(joined, s1);
+	ft_strcpy(joined + ft_strlen(s1), s2);
+	free(s1);
+	return joined;
 }
 
-// Fonction pour extraire la ligne jusqu'à '\n'
-char	*extract_line(char **buffer)
-{
-	int		i;
-	char	*line;
-	char	*temp;
+char	*ft_strchr(const char *s, int c) {
+	while (*s) {
+		if (*s == (char)c)
+			return (char *)s;
+		s++;
+	}
+	if (c == '\0')
+		return (char *)s;
+	return NULL;
+}
 
-	i = find_newline(*buffer);
-	if (i == -1)  // Pas de '\n' trouvé, toute la chaîne est une ligne
-		return (NULL);
-	line = strndup(*buffer, i + 1);  // On prend tout jusqu'à '\n'
-	temp = strdup(&((*buffer)[i + 1]));  // Le reste est stocké pour l'appel suivant
-	free(*buffer);
-	*buffer = temp;
-	return (line);
+char	*ft_strdup(const char *s) {
+	char	*dup = malloc(ft_strlen(s) + 1);
+	if (!dup)
+		return NULL;
+	ft_strcpy(dup, s);
+	return dup;
 }

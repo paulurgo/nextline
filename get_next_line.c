@@ -12,32 +12,48 @@
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
-{
-	static char	*buffer = NULL;
-	char		*line;
-	char		*tmp_buf;
-	ssize_t		bytes_read;
+char	*extract_line(char **storage) {
+	char	*newline_pos = ft_strchr(*storage, '\n');
+	char	*line;
+	char	*new_storage;
+
+	if (newline_pos) {
+		*newline_pos = '\0';
+		line = ft_strdup(*storage);
+		new_storage = ft_strdup(newline_pos + 1);
+		free(*storage);
+		*storage = new_storage;
+		if (**storage == '\0') {
+			free(*storage);
+			*storage = NULL;
+		}
+		return line;
+	} else {
+		line = ft_strdup(*storage);
+		free(*storage);
+		*storage = NULL;
+		return line;
+	}
+}
+
+char	*get_next_line(int fd) {
+	static char	*storage = NULL;
+	char		buffer[BUFFER_SIZE + 1];
+	int			bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	tmp_buf = malloc(BUFFER_SIZE + 1);
-	if (!tmp_buf)
-		return (NULL);
-	while ((find_newline(buffer) == -1) && (bytes_read = read(fd, tmp_buf, BUFFER_SIZE)) > 0)
-	{
-		tmp_buf[bytes_read] = '\0';
-		buffer = ft_strjoin(buffer, tmp_buf);
+		return NULL;
+	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0) {
+		buffer[bytes_read] = '\0';
+		storage = ft_strjoin(storage, buffer);
+		if (!storage)
+			return NULL;
+		if (ft_strchr(storage, '\n'))
+			break ;
 	}
-	free(tmp_buf);
-	if (bytes_read < 0)
-		return (NULL);
-	line = extract_line(&buffer);
-	if (!line && buffer)
-	{
-		line = strdup(buffer);
-		free(buffer);
-		buffer = NULL;
-	}
-	return (line);
+	if (bytes_read == -1)
+		return NULL;
+	if (storage && *storage)
+		return extract_line(&storage);
+	return NULL;
 }

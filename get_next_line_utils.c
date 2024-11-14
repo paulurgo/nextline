@@ -12,50 +12,80 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s) {
-	size_t	len = 0;
+size_t	ft_strlen(const char *s)
+{
+	size_t	len;
+
+	len = 0;
 	while (s[len])
 		len++;
-	return len;
+	return (len);
 }
 
-char	*ft_strcpy(char *dest, const char *src) {
-	char	*d = dest;
-	while ((*d++ = *src++));
-	return dest;
-}
+char	*ft_strcpy(char *dest, const char *src)
+{
+	char	*d;
 
-char	*ft_strjoin(char *s1, char *s2) {
-	if (!s1 && !s2)
-		return NULL;
-	if (!s1)
-		return ft_strdup(s2);
-	if (!s2)
-		return ft_strdup(s1);
-	char	*joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!joined)
-		return NULL;
-	ft_strcpy(joined, s1);
-	ft_strcpy(joined + ft_strlen(s1), s2);
-	free(s1);
-	return joined;
-}
-
-char	*ft_strchr(const char *s, int c) {
-	while (*s) {
-		if (*s == (char)c)
-			return (char *)s;
-		s++;
+	d = dest;
+	while (*src != '\0')
+	{
+		*d = *src;
+		d++;
+		src++;
 	}
-	if (c == '\0')
-		return (char *)s;
-	return NULL;
+	*d = '\0';
+	return (dest);
 }
 
-char	*ft_strdup(const char *s) {
-	char	*dup = malloc(ft_strlen(s) + 1);
+char	*ft_strjoin(char *s1, const char *s2)
+{
+	size_t	len1;
+	size_t	len2;
+	char	*joined;
+
+	len1 = 0;
+	if (s1)
+		len1 = ft_strlen(s1);
+	len2 = 0;
+	if (s2)
+		len2 = ft_strlen(s2);
+	joined = malloc(len1 + len2 + 1);
+	if (!joined)
+		return (NULL);
+	if (s1)
+		ft_strcpy(joined, s1);
+	if (s2)
+		ft_strcpy(joined + len1, s2);
+	return (joined);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*dup;
+
+	dup = malloc(ft_strlen(s) + 1);
 	if (!dup)
-		return NULL;
+		return (NULL);
 	ft_strcpy(dup, s);
-	return dup;
+	return (dup);
+}
+
+char	*ft_substr(char *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	i;
+
+	i = 0;
+	if (!s || start >= ft_strlen(s))
+		return (ft_strdup(""));
+	sub = malloc(len + 1);
+	if (!sub)
+		return (NULL);
+	while (i < len && s[start + i])
+	{
+		sub[i] = s[start + i];
+		i++;
+	}
+	sub[i] = '\0';
+	return (sub);
 }

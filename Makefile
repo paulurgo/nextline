@@ -1,6 +1,6 @@
 NAME = get_next_line
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=42
+CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=10000000
 SRCS = main.c get_next_line.c get_next_line_utils.c
 OBJS = $(SRCS:.c=.o)
 

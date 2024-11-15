@@ -35,25 +35,40 @@ char	*extract_line(char **storage)
 	return (line);
 }
 
+static int	read_buffer(int fd, char **storage)
+{
+	char	*buffer;
+	int		bytes_read;
+	char	*temp;
+
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (-1);
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read > 0)
+	{
+		buffer[bytes_read] = '\0';
+		temp = ft_strjoin(*storage, buffer);
+		free(*storage);
+		*storage = temp;
+	}
+	free(buffer);
+	return (bytes_read);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*storage = NULL;
-	char		buffer[BUFFER_SIZE + 1];
 	int			bytes_read;
-	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	bytes_read = read_buffer(fd, &storage);
 	while (bytes_read > 0)
 	{
-		buffer[bytes_read] = '\0';
-		temp = ft_strjoin(storage, buffer);
-		free(storage);
-		storage = temp;
 		if (ft_strchr(storage, '\n'))
 			break ;
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		bytes_read = read_buffer(fd, &storage);
 	}
 	if (bytes_read == -1 || (bytes_read == 0 && (!storage || !*storage)))
 	{

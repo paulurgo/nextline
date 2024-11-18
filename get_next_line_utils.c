@@ -24,16 +24,15 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_strcpy(char *dest, const char *src)
 {
-	char	*d;
+	int	i;
 
-	d = dest;
-	while (*src != '\0')
+	i = 0;
+	while (src[i] != '\0')
 	{
-		*d = *src;
-		d++;
-		src++;
+		dest[i] = src[i];
+		i++;
 	}
-	*d = '\0';
+	dest[i] = '\0';
 	return (dest);
 }
 

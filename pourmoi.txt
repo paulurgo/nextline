@@ -1,0 +1,20 @@
+Variable static peut seulement etre initialiser comme dans la fonction, c'est a dire char const static *storage = NULL; car si on definis storage a null autre part storage sera reinitialiser a 0 a chaque appelle de fonction
+Si vous passez seulement storage (au lieu de &storage), la fonction reçoit une copie de l'adresse stockée dans storage. Toute modification dans la fonction affectera uniquement cette copie et non la variable storage elle-même.
+strchr = string charactere
+read
+fd
+C'est le descripteur de fichier. Il s'agit d'un entier qui identifie un fichier ouvert, un socket, ou une autre source d'entrée/sortie.
+Les descripteurs standards sont :
+0 : Entrée standard (stdin).
+1 : Sortie standard (stdout).
+2 : Erreur standard (stderr).
+Si vous ouvrez un fichier avec la fonction open, le descripteur de fichier renvoyé par open est utilisé ici.
+
+buffer
+C'est un pointeur vers une zone mémoire où les données lues seront stockées.
+Dans cette ligne, il pointe vers un espace alloué dynamiquement via malloc (par exemple, char *buffer = malloc(BUFFER_SIZE + 1)).
+BUFFER_SIZE
+Indique la quantité maximale d’octets à lire dans cet appel.
+Si le fichier contient moins de BUFFER_SIZE octets disponibles, read lira autant d’octets que possible.
+La taille réelle lue est retournée dans bytes_read.
+

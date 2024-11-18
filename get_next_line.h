@@ -6,7 +6,7 @@
 /*   By: palefebv <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 01:54:25 by palefebv          #+#    #+#             */
-/*   Updated: 2024/10/25 01:54:44 by palefebv         ###   ########.fr       */
+/*   Updated: 2024/11/17 23:55:59 by palefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 10
 # endif
 
 char	*ft_strjoin(char *s1, const char *s2);

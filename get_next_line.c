@@ -6,7 +6,7 @@
 /*   By: palefebv <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 01:55:49 by palefebv          #+#    #+#             */
-/*   Updated: 2024/10/25 01:56:04 by palefebv         ###   ########.fr       */
+/*   Updated: 2024/11/17 23:41:53 by palefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,5 +114,34 @@ int	main(void)
 	close(fd);
 //	printf("%s", get_next_line(fd));
 //	close(fd);
+	return (0);
+}*/
+/*
+int	main(int argc, char *argv[])
+{
+	int	fd;
+
+	(void)argc;
+	fd = open(argv[1], O_RDONLY);
+	//if (argc > 1)
+	//	return (0);
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	close(fd);
 	return (0);
 }*/

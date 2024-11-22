@@ -1,0 +1,131 @@
+static = garde sa valeure meme quand sa fonction a return.
+
+
+
+static[1024] 1024 = limite du nombre de fichier que l'on peut ouvrir, voir avec ulimit -n
+
+
+
+storage = NULL permet d'eciter les erreur type double free, car lorsque l'on free storage on indique que le stockage n'est plus utiliser mais le pointeur existe encore et pointe donc sur l'encien malloc, storage = 0 permet donc d'eviter les double free car apres storage = null les free seront sens effet.
+
+
+
+fonction read
+fd
+C'est le descripteur de fichier. Il s'agit d'un entier qui identifie un fichier ouvert, un socket, ou une autre source d'entrée/sortie.
+Les descripteurs standards sont :
+0 : Entrée standard (stdin).
+1 : Sortie standard (stdout).
+2 : Erreur standard (stderr).
+Si vous ouvrez un fichier avec la fonction open, le descripteur de fichier renvoyé par open est utilisé ici.
+
+buffer
+C'est un pointeur vers une zone mémoire où les données lues seront stockées.
+Dans cette ligne, il pointe vers un espace alloué dynamiquement via malloc (par exemple, char *buffer = malloc(BUFFER_SIZE + 1)).
+BUFFER_SIZE
+Indique la quantité maximale d’octets à lire dans cet appel.
+Si le fichier contient moins de BUFFER_SIZE octets disponibles, read lira autant d’octets que possible.
+La taille réelle lue est retournée dans bytes_read. 
+
+
+
+ &storage dans l'appelle a read_buffer 
+Si vous passez seulement storage (au lieu de &storage), la fonction reçoit une copie de l'adresse stockée dans storage. Toute modification dans la fonction affectera uniquement cette copie et non la variable storage elle-même.
+
+
+
+Dans strjoin, ft_strcpy(joined + len1, s2); le +len1 est necessaire pour copier s2 apres s1 (len1 est la taille de s1) le +1 au ;alloc sert pour le \0. La memoir alloue dans strjoin est libere dans la fonction ou est appelle ft_srjoin(de meme pour les autre fonction comme strdup ...).
+
+
+
+Utilite de chaque fonction
+
+Fonctions principales
+get_next_line :
+Fonction principale qui permet de lire une ligne d'un fichier ou d'une entrée donnée.
+Utilise un buffer pour lire par blocs (BUFFER_SIZE) et stocke les données restantes dans une variable statique (storage) pour les appels ultérieurs.
+Vérifie si une ligne complète est disponible (via \n) ou si la fin du fichier est atteinte.
+Retourne la ligne lue ou NULL en cas d'erreur ou de fin de fichier.
+
+extract_line :
+Extrait une ligne complète à partir du contenu de storage.
+Si un \n est trouvé, il renvoie la ligne jusqu'à ce caractère et conserve le reste dans storage.
+Si aucun \n n'est trouvé, il renvoie tout le contenu de storage et le vide.
+But principal : Séparer la ligne courante et préparer storage pour l'appel suivant.
+
+read_buffer :
+Lit des données depuis le fichier dans un tampon de taille BUFFER_SIZE.
+Ajoute le contenu du tampon à storage pour permettre l'assemblage des lignes.
+Renvoie le nombre d’octets lus ou -1 en cas d’erreur.
+But principal : Remplir storage avec les données nécessaires.
+
+Fonctions auxiliaires
+ft_strlen :
+Renvoie la longueur d’une chaîne.
+Utilisée dans plusieurs fonctions pour calculer des tailles dynamiques, comme lors de l’allocation de mémoire (dans ft_strdup, ft_strjoin, etc.).
+
+ft_strchr :
+Recherche la première occurrence d’un caractère (c) dans une chaîne (s).
+Utilisée pour trouver le caractère \n dans storage et déterminer si une ligne complète est disponible.
+
+ft_strdup :
+Duplique une chaîne en allouant de la mémoire dynamique.
+Utilisée pour copier une ligne ou créer une chaîne vide (par exemple dans ft_substr ou extract_line).
+
+ft_substr :
+Extrait une sous-chaîne d'une chaîne donnée, à partir d’un indice start et sur une longueur len.
+Utilisée dans extract_line pour extraire une ligne jusqu'à \n.
+
+ft_strjoin :
+Concatène deux chaînes (s1 et s2) dans une nouvelle chaîne allouée dynamiquement.
+Utilisée dans read_buffer pour ajouter le contenu du tampon à storage.
+
+ft_strcpy :
+Copie une chaîne source dans une chaîne de destination.
+Utilisée dans ft_strjoin pour assembler deux chaînes.
+
+Résumé de l'interaction des fonctions
+get_next_line orchestre tout le processus :
+Appelle read_buffer pour remplir storage à partir du fichier.
+Vérifie si une ligne est disponible dans storage via ft_strchr.
+Si une ligne est complète, elle est extraite via extract_line.
+
+extract_line gère la séparation des données dans storage :
+Retourne la ligne demandée.
+Prépare storage pour les appels suivants.
+
+read_buffer lit le fichier par blocs :
+Ajoute le contenu lu à storage via ft_strjoin.
+
+Les fonctions utilitaires (ft_strlen, ft_strchr, etc.) :
+Fournissent des opérations de base (manipulation de chaînes, duplication, concaténation).
+
+
+
+Expliquation ft_substr
+La fonction ft_substr extrait une sous-chaîne à partir d'une chaîne donnée. Elle prend trois arguments :
+s : La chaîne source à partir de laquelle on extrait la sous-chaîne.
+start : L'indice de début de l'extraction.
+len : La longueur de la sous-chaîne à extraire.
+
+if (!s || start >= ft_strlen(s))
+		return (ft_strdup(""));
+=
+Vérification de la validité des entrées :
+Si la chaîne s est NULL ou si start est supérieur ou égal à la longueur de la chaîne (ft_strlen(s)), cela signifie qu'il n'y a rien à extraire.
+Dans ce cas, la fonction retourne une chaîne vide. Pour cela, elle appelle ft_strdup("") qui alloue et retourne une chaîne vide.
+
+while (i < len && s[start + i])
+{
+	sub[i] = s[start + i];
+	i++;
+}
+=
+Remplissage de la sous-chaîne :
+Cette boucle copie les caractères de la chaîne source s dans sub.
+La boucle continue tant que i est inférieur à len (la longueur de la sous-chaîne demandée) et que l'index start + i ne dépasse pas la fin de la chaîne s (pour éviter de lire en dehors des limites de la chaîne).
+sub[i] = s[start + i] : Le caractère à la position start + i dans la chaîne source s est copié dans sub à la position i.
+i++ : Le compteur est incrémenté pour copier le prochain caractère.
+
+La fonction ft_strdup est utilisée pour dupliquer une chaîne de caractères. Elle alloue de la mémoire et copie le contenu de la chaîne source dans cette nouvelle zone mémoire. L'utilisation de ft_strdup dans votre fonction ft_substr permet de garantir un comportement correct et sûr lorsque vous devez créer une nouvelle chaîne
+Si s est NULL ou si start est supérieur à la longueur de la chaîne source, cela signifie qu'il n'y a rien à extraire, et donc la fonction retourne une chaîne vide. Cependant, cette chaîne vide doit être allouée dynamiquement, car ft_substr renvoie un pointeur vers une nouvelle chaîne, et NULL ne peut pas être utilisé comme une chaîne valide. ft_strdup("") est donc appelé pour allouer une nouvelle chaîne vide et renvoyer un pointeur valide.

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: palefebv <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 01:55:49 by palefebv          #+#    #+#             */
-/*   Updated: 2024/11/17 23:41:53 by palefebv         ###   ########.fr       */
+/*   Updated: 2024/11/20 03:09:54 by palefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -71,68 +71,55 @@ static int	read_buffer(int fd, char **storage)
 
 char	*get_next_line(int fd)
 {
-	static char	*storage;
+	static char	*storage[1024];
 	int			bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	bytes_read = read_buffer(fd, &storage);
+	bytes_read = read_buffer(fd, &storage[fd]);
 	while (bytes_read > 0)
 	{
-		if (ft_strchr(storage, '\n'))
+		if (ft_strchr(storage[fd], '\n'))
 			break ;
-		bytes_read = read_buffer(fd, &storage);
+		bytes_read = read_buffer(fd, &storage[fd]);
 	}
-	if (bytes_read == -1 || (bytes_read == 0 && (!storage || !*storage)))
+	if (bytes_read == -1 || (bytes_read == 0
+			&& (!storage[fd] || !*storage[fd])))
 	{
-		free(storage);
-		storage = NULL;
+		free(storage[fd]);
+		storage[fd] = NULL;
 		return (NULL);
 	}
-	return (extract_line(&storage));
+	return (extract_line(&storage[fd]));
 }
 
 /*
 #include <fcntl.h>
 #include <stdio.h>
-int	main(void)
-{
-	int	fd;
-	
-	fd = open("test.txt", O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Erreur lors de l'ouverture du fichier");
-		return (1);
-	}
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
 
-	close(fd);
-	return (0);
-}
-*/
-/*int	main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	int	fd;
+	int	fd2;
 
 	(void)argc;
 	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
+	fd2 = open(argv[2], O_RDONLY);
+	if (fd == -1 || fd2 == -1)
 	{
 		perror("Erreur lors de l'ouverture du fichier");
 		return (1);
 	}
 	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd2));
 	printf("%s", get_next_line(fd));
 	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd2));
+	printf("%s", get_next_line(fd2));
 	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd2));
 	printf("%s", get_next_line(fd));
-
 	close(fd);
+	close(fd2);
 	return (0);
 }*/
